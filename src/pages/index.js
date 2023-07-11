@@ -53,7 +53,7 @@ function Dashboard() {
               !regexInvestor.test(person.industry) &&
               !regexAccelerator.test(person.industry) &&
               !regexProfessor.test(person.industry) &&
-              !regexInternship.test(person.industry)
+              !regexInternship.test(person.notes)
             );
           }
 
