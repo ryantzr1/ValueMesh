@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #eaf6fd; /* Replace with your desired cool color */
+}
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filter-button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.filter-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px; /* Adjust this value as needed */
+}
