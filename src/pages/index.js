@@ -8,7 +8,14 @@ function Dashboard() {
   const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("none");
 
-  const filters = ["All", "Investor", "Accelerator", "Professor", "Others"];
+  const filters = [
+    "All",
+    "Investor",
+    "Accelerator",
+    "Professor",
+    "Internship?",
+    "Others",
+  ];
   const sorts = ["none", "increasing", "decreasing"];
 
   useEffect(() => {
@@ -31,6 +38,7 @@ function Dashboard() {
           const regexInvestor = /investor/i; // Regular expression to match "investor" case-insensitively
           const regexAccelerator = /accelerator/i; // Regular expression to match "accelerator" case-insensitively
           const regexProfessor = /professor/i; // Regular expression to match "accelerator" case-insensitively
+          const regexInternship = /intern/i; // Regular expression to match "accelerator" case-insensitively
 
           if (filter === "Investor") {
             return regexInvestor.test(person.industry);
@@ -38,11 +46,14 @@ function Dashboard() {
             return regexAccelerator.test(person.industry);
           } else if (filter === "Professor") {
             return regexProfessor.test(person.industry);
+          } else if (filter === "Internship?") {
+            return regexInternship.test(person.industry);
           } else if (filter === "Others") {
             return (
               !regexInvestor.test(person.industry) &&
               !regexAccelerator.test(person.industry) &&
-              !regexProfessor.test(person.industry)
+              !regexProfessor.test(person.industry) &&
+              !regexInternship.test(person.industry)
             );
           }
 
