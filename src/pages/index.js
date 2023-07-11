@@ -41,7 +41,8 @@ function Dashboard() {
           } else if (filter === "Others") {
             return (
               !regexInvestor.test(person.industry) &&
-              !regexAccelerator.test(person.industry)
+              !regexAccelerator.test(person.industry) &&
+              !regexProfessor.test(person.industry)
             );
           }
 
