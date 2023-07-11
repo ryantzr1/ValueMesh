@@ -47,7 +47,7 @@ function Dashboard() {
           } else if (filter === "Professor") {
             return regexProfessor.test(person.industry);
           } else if (filter === "Internship?") {
-            return regexInternship.test(person.industry);
+            return regexInternship.test(person.notes);
           } else if (filter === "Others") {
             return (
               !regexInvestor.test(person.industry) &&
