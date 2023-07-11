@@ -8,7 +8,7 @@ function Dashboard() {
   const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("none");
 
-  const filters = ["All", "Investor", "Accelerator", "Others"];
+  const filters = ["All", "Investor", "Accelerator", "Professor", "Others"];
   const sorts = ["none", "increasing", "decreasing"];
 
   useEffect(() => {
