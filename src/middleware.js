@@ -24,12 +24,11 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  console.log("user already logged in");
-  // console.log(user);
+  console.log(user);
 
   return res;
 }
 
 export const config = {
-  matcher: ["/", "/login"],
+  matcher: ["/", "/login", "/signup"],
 };
