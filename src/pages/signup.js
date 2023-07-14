@@ -38,7 +38,7 @@ export default function SignUp() {
       alert(
         "Sign-up successful! You'll receive an email to verify your account."
       );
-      router.refresh();
+      revalidatePath("/");
     }
   };
 
