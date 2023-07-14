@@ -28,17 +28,14 @@ export default function SignUp() {
       email,
       password,
       options: {
-        emailRedirectTo: `https://value-mesh.vercel.app/auth/callback`,
+        emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
     setLoading(false);
     if (error) {
       setError(error.message);
     } else {
-      alert(
-        "Sign-up successful! You'll receive an email to verify your account."
-      );
-      revalidatePath("/");
+      router.refresh();
     }
   };
 
