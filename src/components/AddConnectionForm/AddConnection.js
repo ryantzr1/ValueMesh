@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Fab, Button, Modal, TextField, Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 function AddConnectionModal() {
   const [open, setOpen] = useState(false);
@@ -13,9 +14,12 @@ function AddConnectionModal() {
     linkedin: "",
     metAt: "",
     notes: "",
+    userId: null,
   });
 
   const router = useRouter();
+
+  const supabase = createClientComponentClient();
 
   const handleChange = (e) => {
     setConnection({ ...connection, [e.target.name]: e.target.value });
@@ -25,7 +29,15 @@ function AddConnectionModal() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/getConnections", connection);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const connectionWithUserId = { ...connection, userId: user.id };
+
+      const response = await axios.post(
+        "/api/getConnections",
+        connectionWithUserId
+      );
       router.push("/"); // Redirect to the home page
       window.location.reload(); // Refresh the home page
     } catch (error) {

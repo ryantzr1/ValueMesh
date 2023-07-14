@@ -6,6 +6,10 @@ const ConnectionSchema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+  },
   industry: {
     type: String,
     required: true,

@@ -5,7 +5,10 @@ import cors from "cors";
 const getConnections = async (req, res) => {
   try {
     await mongoDB();
-    const people = await Connection.find().exec();
+
+    const userId = req.query.userId; // Get the userId from the query parameters
+
+    const people = await Connection.find({ userId: userId }).exec(); // Find connections for the specific user
     res.status(200).json(people);
   } catch (error) {
     console.error(error);
@@ -16,6 +19,7 @@ const getConnections = async (req, res) => {
 const addConnection = async (req, res) => {
   try {
     const newPerson = req.body;
+    console.log(newPerson);
     const connection = new Connection(newPerson);
     const result = await connection.save();
     res.status(201).json(result);

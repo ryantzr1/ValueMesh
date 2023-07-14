@@ -2,11 +2,38 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PeopleCluster from "../components/PeopleCluster/PeopleCluster";
 import AddConnectionModal from "../components/AddConnectionForm/AddConnection";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+const supabase = createClientComponentClient();
 
 function Dashboard() {
   const [people, setPeople] = useState([]);
   const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("none");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        try {
+          const response = await axios.get(
+            `/api/getConnections?userId=${user.id}`
+          ); // Get data for the current user
+          console.log(response.data);
+          setPeople(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        console.log("failed ");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filters = [
     "All",
@@ -17,19 +44,6 @@ function Dashboard() {
     "Others",
   ];
   const sorts = ["none", "increasing", "decreasing"];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/getConnections");
-        setPeople(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const filteredPeople =
     filter === "All"
