@@ -3,8 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
-  const requestUrl = new URL("request.url");
-  console.log(requestUrl);
+  const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
 
   if (code) {
@@ -14,5 +13,5 @@ export async function GET(request) {
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect("https://value-mesh.vercel.app/");
+  return NextResponse.redirect(requestUrl.origin);
 }

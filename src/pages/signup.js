@@ -28,7 +28,7 @@ export default function SignUp() {
       email,
       password,
       options: {
-        emailRedirectTo: `https://value-mesh.vercel.app/auth/callback`,
+        emailRedirectTo: `${location.orign}/auth/callback`,
       },
     });
     setLoading(false);
