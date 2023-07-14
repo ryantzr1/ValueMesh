@@ -3,6 +3,7 @@ import axios from "axios";
 import PeopleCluster from "../components/PeopleCluster/PeopleCluster";
 import AddConnectionModal from "../components/AddConnectionForm/AddConnection";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import SignOut from "../components/signOut";
 
 const supabase = createClientComponentClient();
 
@@ -126,6 +127,7 @@ function Dashboard() {
       >
         Created by: ryantzr 😊
       </footer>
+      <SignOut></SignOut>
     </div>
   );
 }
