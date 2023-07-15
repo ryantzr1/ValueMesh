@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import TagInput from "../AddConnectionForm/TagInput";
 
 import {
   Dialog,
@@ -8,11 +9,30 @@ import {
   DialogActions,
   Button,
   TextField,
+  Autocomplete,
+  Chip,
 } from "@mui/material";
 
 export default function PersonCard({ person }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedPerson, setEditedPerson] = useState(person); // State to track edited person details
+  const [editedPerson, setEditedPerson] = useState({
+    ...person,
+    tags: person.tags ?? [],
+  });
+  const [tagInput, setTagInput] = useState("");
+
+  // Assuming you have a list of possible tags
+  const [possibleTags, setPossibleTags] = useState([]);
+
+  useEffect(() => {
+    if (person) {
+      setEditedPerson({
+        ...person,
+        tags: person.tags ?? [],
+      });
+      setTagInput(person.tags ? person.tags.join(", ") : "");
+    }
+  }, [person]);
 
   const handleClickOpen = () => {
     setIsModalOpen(true);
@@ -26,6 +46,13 @@ export default function PersonCard({ person }) {
     handleClose();
   };
 
+  const handleTagInput = (newTags) => {
+    setEditedPerson((prevPerson) => ({
+      ...prevPerson,
+      tags: newTags,
+    }));
+  };
+
   const handleDelete = async () => {
     try {
       // Send a DELETE request to the server to delete the connection
@@ -34,8 +61,6 @@ export default function PersonCard({ person }) {
       window.location.reload(); // Refresh the home page
     } catch (error) {
       console.error("Failed to delete connection:", error);
-      // Handle error condition, such as showing an error message
-      // showErrorMessage("Failed to delete connection");
     }
   };
 
@@ -46,6 +71,7 @@ export default function PersonCard({ person }) {
       [name]: value,
     }));
   };
+
   const handleSave = async () => {
     try {
       // Send a PUT request to update the connection
@@ -54,8 +80,6 @@ export default function PersonCard({ person }) {
       window.location.reload(); // Refresh the home page
     } catch (error) {
       console.error("Failed to update connection:", error);
-      // Handle error condition, such as showing an error message
-      // showErrorMessage("Failed to update connection");
     }
   };
 
@@ -85,18 +109,25 @@ export default function PersonCard({ person }) {
           <p className="text-gray-600 mb-2">Met Through: {person.metAt}</p>
         )}
         {person.value && (
-          <p className="text-green-500">Value: {person.value}</p>
+          <p className="text-green-500 mb-3">Value: {person.value}</p>
+        )}
+        {person.tags && (
+          <p className="mb-2">
+            {person.tags.map((tag) => (
+              <Chip key={tag} label={tag} className="mr-1" />
+            ))} 
+          </p>
         )}
       </div>
 
       <Dialog
         open={isModalOpen}
         onClose={handleDialogClose}
-        className="person-card-modal" // Custom class name for the dialog
+        className="person-card-modal"
         PaperProps={{
           style: {
-            width: "600px", // Adjust the width as per your requirements
-            height: "400px", // Adjust the height as per your requirements
+            width: "600px",
+            height: "400px",
           },
         }}
       >
@@ -143,6 +174,8 @@ export default function PersonCard({ person }) {
             fullWidth
             margin="normal"
           />
+          <TagInput value={editedPerson.tags} onChange={handleTagInput} />
+
           <TextField
             label="Notes"
             name="notes"

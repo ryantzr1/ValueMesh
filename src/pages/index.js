@@ -44,7 +44,13 @@ function Dashboard() {
     "Internship?",
     "Others",
   ];
-  const sorts = ["none", "increasing", "decreasing"];
+  const sorts = [
+    "None",
+    "Name: A-Z",
+    "Name: Z-A",
+    "Value: Low-High",
+    "Value: High-Low",
+  ];
 
   const filteredPeople =
     filter === "All"
@@ -76,9 +82,20 @@ function Dashboard() {
         });
 
   const sortedPeople = [...filteredPeople].sort((a, b) => {
-    if (sort === "none") return 0;
-    if (sort === "increasing") return a.value - b.value;
-    if (sort === "decreasing") return b.value - a.value;
+    switch (sort) {
+      case "None":
+        return 0;
+      case "Name: A-Z":
+        return a.name.localeCompare(b.name);
+      case "Name: Z-A":
+        return b.name.localeCompare(a.name);
+      case "Value: Low-High":
+        return a.value - b.value;
+      case "Value: High-Low":
+        return b.value - a.value;
+      default:
+        return 0;
+    }
   });
 
   return (
@@ -118,15 +135,68 @@ function Dashboard() {
       <PeopleCluster title={`People: ${filter}`} people={sortedPeople} />
       <footer
         style={{
-          left: 0,
-          bottom: 0,
-          width: "100%",
-          color: "black", // Change as needed
-          textAlign: "left",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "20px 30px",
+          borderTop: "0.5px solid #d3d3d3",
         }}
       >
-        Created by: ryantzr 😊
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+          }}
+        >
+          {/* <a
+            href="https://yourwebsite.com"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            © Your Company Name
+          </a> */}
+          <a
+            // href="https://yourtwitter.com"
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Created by: ryantzr 😊
+          </a>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+          }}
+        >
+          {/* <a
+            href="https://yourwebsite.com/faq"
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            FAQs
+          </a>
+          <a
+            href="https://yourwebsite.com/privacy-policy"
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Privacy Policy
+          </a>
+          <a
+            href="https://yourwebsite.com/terms"
+            target="_blank"
+            rel="noreferrer noopener"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            Terms of Use
+          </a> */}
+        </div>
       </footer>
+
       <SignOut></SignOut>
     </div>
   );

@@ -20,11 +20,25 @@ export default function Login() {
   };
 
   const handleSignIn = async () => {
-    await supabase.auth.signInWithPassword({
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    router.push("/");
+
+    setLoading(false);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      router.push("/");
+    }
   };
 
   return (

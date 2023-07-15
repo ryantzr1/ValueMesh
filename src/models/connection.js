@@ -34,6 +34,10 @@ const ConnectionSchema = new Schema({
     type: String,
     required: false,
   },
+  tags: {
+    type: Array,
+    required: false,
+  },
 });
 
 const Connection =

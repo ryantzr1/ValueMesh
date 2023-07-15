@@ -23,17 +23,25 @@ export default function SignUp() {
 
   const handleSignUp = async () => {
     if (!validateForm()) return;
+
     setLoading(true);
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${location.orign}/auth/callback`,
+        emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
+
     setLoading(false);
+
     if (error) {
-      setError(error.message);
+      if (error.message.includes("already exists")) {
+        setError("This email is already registered. Please log in.");
+      } else {
+        setError(error.message);
+      }
     } else {
       alert(
         "Sign-up successful! You'll receive an email to verify your account."
