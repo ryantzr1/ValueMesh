@@ -68,13 +68,13 @@ function Dashboard() {
           } else if (filter === "Professor") {
             return regexProfessor.test(person.industry);
           } else if (filter === "Internship?") {
-            return regexInternship.test(person.notes);
+            return regexInternship.test(person.tags);
           } else if (filter === "Others") {
             return (
               !regexInvestor.test(person.industry) &&
               !regexAccelerator.test(person.industry) &&
               !regexProfessor.test(person.industry) &&
-              !regexInternship.test(person.notes)
+              !regexInternship.test(person.tags)
             );
           }
 
