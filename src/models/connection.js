@@ -40,6 +40,11 @@ const ConnectionSchema = new Schema({
   },
 });
 
+// Creating an index on the 'userId' field
+ConnectionSchema.index({ userId: 1 });
+
+//Remember, while indexes can speed up read operations, they can also slow down write operations because every time a document is inserted or updated, the index also needs to be updated. Therefore, you should only create indexes on fields that you query frequently.
+
 const Connection =
   mongoose.models.Connection || mongoose.model("Connection", ConnectionSchema);
 export default Connection;
