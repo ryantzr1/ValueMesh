@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, TextField, Typography, Box } from "@mui/material";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import TagInput from "./TagInput";
+import UserContext from "../../UserContext";
 
 const ConnectionForm = ({ onClose }) => {
   const [connection, setConnection] = useState({
@@ -29,19 +30,24 @@ const ConnectionForm = ({ onClose }) => {
     setConnection({ ...connection, tags: tags });
   };
 
+  const { loading, user } = useContext(UserContext);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      const connectionWithUserId = { ...connection, userId: user.id };
+      // const {
+      //   data: { user },
+      // } = await supabase.auth.getUser();
+
+      const connectionWithUserId = { ...connection, userId: user.uid };
 
       const response = await axios.post(
         "/api/getConnections",
         connectionWithUserId
       );
+      console.log("done");
+
       router.push("/");
       window.location.reload();
     } catch (error) {

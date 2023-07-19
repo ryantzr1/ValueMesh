@@ -9,16 +9,14 @@ const getConnections = async (req, res) => {
     mongoDB()
       .then(() => {
         const connectionState = mongoose.connection.readyState;
-        console.log("Connection state:", connectionState); // Log the connection state
+        // console.log("Connection state:", connectionState); // Log the connection state
       })
       .catch((error) => {
         console.error("Error connecting to MongoDB:", error);
       });
 
-    const userId = req.query.userId; // Get the userId from the query parameters
-    console.log(userId + " This is userID ");
+    const userId = req.query.userId;
     const people = await Connection.find({ userId: userId }).exec(); // Find connections for the specific user
-    console.log(people);
     res.status(200).json(people);
   } catch (error) {
     console.error(error);

@@ -8,7 +8,6 @@ const supabase = createClientComponentClient();
 
 function SignOut() {
   const handleSignOut = async () => {
-    console.log("signing out");
     signOut(auth)
       .then(() => {
         router.push("/login");
