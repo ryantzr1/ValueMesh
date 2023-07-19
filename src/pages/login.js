@@ -2,6 +2,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Link from "next/link";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../components/config/firebase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,25 +21,43 @@ export default function Login() {
     return true;
   };
 
-  const handleSignIn = async () => {
-    if (!validateForm()) {
-      return;
-    }
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    // if (!validateForm()) {
+    //   return;
+    // }
 
-    setLoading(true);
-    setError(null);
+    // setLoading(true);
+    // setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    // const { error } = await supabase.auth.signInWithPassword({
+    //   email,
+    //   password,
+    // });
 
-    setLoading(false);
+    // setLoading(false);
 
-    if (error) {
-      setError(error.message);
-    } else {
+    // if (error) {
+    //   setError(error.message);
+    // } else {
+    //   router.push("/");
+    // }
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      console.log(user);
+      console.log("Success");
       router.push("/");
+      console.log("testing123");
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
     }
   };
 

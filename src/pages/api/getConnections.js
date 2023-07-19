@@ -1,14 +1,24 @@
 import mongoDB from "../../utils/mongoDB";
 import Connection from "../../models/connection";
-import cors from "cors";
+import mongoose from "mongoose"; // Ensure to import mongoose
+
+// import cors from "cors";
 
 const getConnections = async (req, res) => {
   try {
-    await mongoDB();
+    mongoDB()
+      .then(() => {
+        const connectionState = mongoose.connection.readyState;
+        console.log("Connection state:", connectionState); // Log the connection state
+      })
+      .catch((error) => {
+        console.error("Error connecting to MongoDB:", error);
+      });
 
     const userId = req.query.userId; // Get the userId from the query parameters
-
+    console.log(userId + " This is userID ");
     const people = await Connection.find({ userId: userId }).exec(); // Find connections for the specific user
+    console.log(people);
     res.status(200).json(people);
   } catch (error) {
     console.error(error);

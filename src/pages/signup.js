@@ -1,9 +1,11 @@
 "use client";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../components/config/firebase";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -11,7 +13,7 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
 
   const validateForm = () => {
     if (!email || !password) {
@@ -22,33 +24,40 @@ export default function SignUp() {
   };
 
   const handleSignUp = async () => {
-    if (!validateForm()) return;
-
-    setLoading(true);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-    router.refresh();
-
-    setLoading(false);
-
-    if (error) {
-      if (error.message.includes("already exists")) {
-        setError("This email is already registered. Please log in.");
-      } else {
-        setError(error.message);
-      }
-    } else {
-      alert(
-        "Sign-up successful! You'll receive an email to verify your account."
-      );
-      router.refresh("/");
-    }
+    // if (!validateForm()) return;
+    // setLoading(true);
+    // const { error } = await supabase.auth.signUp({
+    //   email,
+    //   password,
+    //   options: {
+    //     emailRedirectTo: `${location.origin}/auth/callback`,
+    //   },
+    // });
+    // router.refresh();
+    // setLoading(false);
+    // if (error) {
+    //   if (error.message.includes("already exists")) {
+    //     setError("This email is already registered. Please log in.");
+    //   } else {
+    //     setError(error.message);
+    //   }
+    // } else {
+    //   alert(
+    //     "Sign-up successful! You'll receive an email to verify your account."
+    //   );
+    //   router.refresh("/");
+    // }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
   };
 
   return (

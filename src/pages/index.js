@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import PeopleCluster from "../components/PeopleCluster/PeopleCluster";
 import AddConnectionModal from "../components/AddConnectionForm/AddConnection";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import SignOut from "../components/signOut";
+import UserContext from "../UserContext";
 
 const supabase = createClientComponentClient();
 
@@ -11,30 +12,25 @@ function Dashboard() {
   const [people, setPeople] = useState([]);
   const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("none");
-
+  const { loading, user } = useContext(UserContext);
   useEffect(() => {
     const fetchData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
+      if (!loading && user) {
+        // Check that loading is false and user is not null
+        console.log(user);
         try {
           const response = await axios.get(
-            `/api/getConnections?userId=${user.id}`
-          ); // Get data for the current user
-          console.log(response.data);
+            `/api/getConnections?userId=${user.uid}`
+          );
           setPeople(response.data);
         } catch (error) {
           console.error(error);
         }
-      } else {
-        console.log("failed ");
       }
     };
 
     fetchData();
-  }, []);
+  }, [loading, user]); // Add loading and user as dependencies
 
   const filters = [
     "All",
@@ -97,6 +93,10 @@ function Dashboard() {
         return 0;
     }
   });
+
+  if (loading) {
+    return <div>Loading...</div>; // Or some other loading content
+  }
 
   return (
     <div className="container mx-auto p-4">
