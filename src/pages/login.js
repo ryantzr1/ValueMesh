@@ -1,4 +1,6 @@
 import { useRouter } from "next/router";
+import { FcGoogle } from "react-icons/fc";
+
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -15,7 +17,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-
   const googleProvider = new GoogleAuthProvider();
 
   const handleSignIn = async (e) => {
@@ -77,7 +78,8 @@ export default function Login() {
             onClick={handleSignInWithGoogle}
             className={styles.buttonGoogle}
           >
-            Sign in with Google
+            <FcGoogle size={24} />
+            <span style={{ marginLeft: "8px" }}>Sign up with Google</span>
           </button>
         </form>
         <div className={styles.linkContainer}>

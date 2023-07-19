@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Link from "next/link";
 import styles from "../styles/signup.module.css";
+import { FcGoogle } from "react-icons/fc";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -74,7 +75,8 @@ export default function SignUp() {
             onClick={handleSignUpWithGoogle}
             className={styles.buttonGoogle}
           >
-            Sign up with Google
+            <FcGoogle size={24} />
+            <span style={{ marginLeft: "8px" }}>Sign up with Google</span>
           </button>
         </form>
         <div className={styles.linkContainer}>
