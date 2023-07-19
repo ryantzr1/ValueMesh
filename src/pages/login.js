@@ -79,7 +79,7 @@ export default function Login() {
             className={styles.buttonGoogle}
           >
             <FcGoogle size={24} />
-            <span style={{ marginLeft: "8px" }}>Sign up with Google</span>
+            <span style={{ marginLeft: "8px" }}>Sign in with Google</span>
           </button>
         </form>
         <div className={styles.linkContainer}>
