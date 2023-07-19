@@ -59,7 +59,7 @@ function Dashboard() {
           const regexInvestor = /investor/i; // Regular expression to match "investor" case-insensitively
           const regexAccelerator = /accelerator/i; // Regular expression to match "accelerator" case-insensitively
           const regexProfessor = /professor/i; // Regular expression to match "accelerator" case-insensitively
-          const regexInternship = /intern/i; // Regular expression to match "accelerator" case-insensitively
+          const regexInternship = /intern/i; // Regular expression to match "intern" case-insensitively
 
           if (filter === "Investor") {
             return regexInvestor.test(person.industry);

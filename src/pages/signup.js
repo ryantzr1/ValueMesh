@@ -33,6 +33,7 @@ export default function SignUp() {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
+    router.refresh();
 
     setLoading(false);
 
