@@ -1,8 +1,13 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { auth } from "../components/config/firebase";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Link from "next/link";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../components/config/firebase";
+import styles from "../styles/signup.module.css";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -11,31 +16,37 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
+  const googleProvider = new GoogleAuthProvider();
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
-        console.log(user);
         router.push("/");
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(error);
         setError(errorMessage);
       });
   };
 
+  const handleSignUpWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      router.push("/");
+    } catch (error) {
+      const errorMessage = error.message;
+      setError(errorMessage);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-        </div>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.mainTitle}>ValueMesh</h1>
+        <h2 className={styles.title}>Create your account</h2>
         <form onSubmit={handleSignUp}>
           <input
             name="email"
@@ -44,7 +55,7 @@ export default function SignUp() {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             placeholder="Email"
-            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm mb-8"
+            className={styles.input}
           />
           <input
             type="password"
@@ -53,20 +64,24 @@ export default function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="Password"
-            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm mb-8"
+            className={styles.input}
           />
-          {error && <div className="text-red-500 text-center">{error}</div>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
+          {error && <div className={styles.error}>{error}</div>}
+          <button type="submit" disabled={loading} className={styles.button}>
             {loading ? "Loading..." : "Sign up"}
           </button>
+          <button
+            onClick={handleSignUpWithGoogle}
+            className={styles.buttonGoogle}
+          >
+            Sign up with Google
+          </button>
         </form>
-        <div className="text-center">
-          <Link className="text-indigo-600 hover:text-indigo-500" href="/login">
-            Already have an account? Sign in
+        <div className={styles.linkContainer}>
+          <Link href="/login" passHref>
+            <span className={styles.link}>
+              Already have an account? Sign in
+            </span>
           </Link>
         </div>
       </div>
