@@ -2,11 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import PeopleCluster from "../components/PeopleCluster/PeopleCluster";
 import AddConnectionModal from "../components/AddConnectionForm/AddConnection";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import SignOut from "../components/signOut";
 import UserContext from "../UserContext";
-
-const supabase = createClientComponentClient();
 
 function Dashboard() {
   const [people, setPeople] = useState([]);

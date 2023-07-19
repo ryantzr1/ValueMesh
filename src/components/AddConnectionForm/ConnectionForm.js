@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import { Button, TextField, Typography, Box } from "@mui/material";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import TagInput from "./TagInput";
 import UserContext from "../../UserContext";
 
@@ -20,7 +19,6 @@ const ConnectionForm = ({ onClose }) => {
   });
 
   const router = useRouter();
-  const supabase = createClientComponentClient();
 
   const handleChange = (e) => {
     setConnection({ ...connection, [e.target.name]: e.target.value });
@@ -36,10 +34,6 @@ const ConnectionForm = ({ onClose }) => {
     e.preventDefault();
 
     try {
-      // const {
-      //   data: { user },
-      // } = await supabase.auth.getUser();
-
       const connectionWithUserId = { ...connection, userId: user.uid };
 
       const response = await axios.post(

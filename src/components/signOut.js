@@ -1,10 +1,7 @@
 import React from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/router";
 import { getAuth, signOut } from "firebase/auth";
 import { auth } from "../components/config/firebase";
-
-const supabase = createClientComponentClient();
 
 function SignOut() {
   const handleSignOut = async () => {
