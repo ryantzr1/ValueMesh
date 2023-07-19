@@ -1,7 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Link from "next/link";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { auth } from "../components/config/firebase";
 import styles from "../styles/signup.module.css";
 
@@ -11,6 +15,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
+
+  const googleProvider = new GoogleAuthProvider();
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -25,6 +31,17 @@ export default function Login() {
     } catch (error) {
       const errorMessage = error.message;
       setError("Invalid Username/Password. Please try again");
+    }
+  };
+
+  const handleSignInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      router.push("/");
+    } catch (error) {
+      const errorMessage = error.message;
+      setError(errorMessage);
     }
   };
 
@@ -55,6 +72,12 @@ export default function Login() {
           {error && <div className={styles.error}>{error}</div>}
           <button type="submit" disabled={loading} className={styles.button}>
             {loading ? "Loading..." : "Sign in"}
+          </button>
+          <button
+            onClick={handleSignInWithGoogle}
+            className={styles.buttonGoogle}
+          >
+            Sign in with Google
           </button>
         </form>
         <div className={styles.linkContainer}>
