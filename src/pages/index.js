@@ -7,14 +7,13 @@ import UserContext from "../UserContext";
 
 function Dashboard() {
   const [people, setPeople] = useState([]);
-  const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("none");
+  const [selectedTag, setSelectedTag] = useState("All");
   const { loading, user } = useContext(UserContext);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!loading && user) {
-        // Check that loading is false and user is not null
-        console.log(user);
         try {
           const response = await axios.get(
             `/api/getConnections?userId=${user.uid}`
@@ -27,16 +26,8 @@ function Dashboard() {
     };
 
     fetchData();
-  }, [loading, user]); // Add loading and user as dependencies
+  }, [loading, user]);
 
-  const filters = [
-    "All",
-    "Investor",
-    "Accelerator",
-    "Professor",
-    "Internship?",
-    "Others",
-  ];
   const sorts = [
     "None",
     "Name: A-Z",
@@ -45,34 +36,13 @@ function Dashboard() {
     "Value: High-Low",
   ];
 
+  // Extract unique tags for filtering
+  const allTags = ["All", ...new Set(people.flatMap((person) => person.tags))];
+
   const filteredPeople =
-    filter === "All"
-      ? people
-      : people.filter((person) => {
-          const regexInvestor = /investor/i; // Regular expression to match "investor" case-insensitively
-          const regexAccelerator = /accelerator/i; // Regular expression to match "accelerator" case-insensitively
-          const regexProfessor = /professor/i; // Regular expression to match "accelerator" case-insensitively
-          const regexInternship = /intern/i; // Regular expression to match "intern" case-insensitively
-
-          if (filter === "Investor") {
-            return regexInvestor.test(person.industry);
-          } else if (filter === "Accelerator") {
-            return regexAccelerator.test(person.industry);
-          } else if (filter === "Professor") {
-            return regexProfessor.test(person.industry);
-          } else if (filter === "Internship?") {
-            return regexInternship.test(person.tags);
-          } else if (filter === "Others") {
-            return (
-              !regexInvestor.test(person.industry) &&
-              !regexAccelerator.test(person.industry) &&
-              !regexProfessor.test(person.industry) &&
-              !regexInternship.test(person.tags)
-            );
-          }
-
-          return false; // Invalid filter option
-        });
+    selectedTag !== "All"
+      ? people.filter((person) => person.tags.includes(selectedTag))
+      : people;
 
   const sortedPeople = [...filteredPeople].sort((a, b) => {
     switch (sort) {
@@ -92,29 +62,29 @@ function Dashboard() {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Or some other loading content
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="container mx-auto p-4">
       <AddConnectionModal />
-      <div className="filter-container">
-        {filters.map((filterOption) => (
-          <button
-            key={filterOption}
-            className={`filter-button ${
-              filterOption === filter ? "active" : ""
-            }`}
-            onClick={() => setFilter(filterOption)}
-          >
-            {filterOption}
-          </button>
-        ))}
-      </div>
-      <div className="sort-container">
-        <label htmlFor="sort">Sort by: </label>
-        <span style={{ marginRight: "8px" }}></span>
+      <div className="filter-sort-container">
+        <label htmlFor="tag">Filter by tag: </label>
+        <select
+          id="tag"
+          value={selectedTag}
+          onChange={(e) => setSelectedTag(e.target.value)}
+          className="text-center"
+          style={{ padding: "8px", marginLeft: "8px", marginRight: "32px" }}
+        >
+          {allTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
 
+        <label htmlFor="sort">Sort by: </label>
         <select
           id="sort"
           value={sort}
@@ -129,7 +99,7 @@ function Dashboard() {
           ))}
         </select>
       </div>
-      <PeopleCluster title={`People: ${filter}`} people={sortedPeople} />
+      <PeopleCluster title={`People: ${selectedTag}`} people={sortedPeople} />
       <footer
         style={{
           display: "flex",
@@ -145,52 +115,13 @@ function Dashboard() {
             gap: "20px",
           }}
         >
-          {/* <a
-            href="https://yourwebsite.com"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            © Your Company Name
-          </a> */}
           <a
-            // href="https://yourtwitter.com"
             target="_blank"
             rel="noreferrer noopener"
             style={{ textDecoration: "none", color: "black" }}
           >
             Created by: ryantzr 😊
           </a>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-          }}
-        >
-          {/* <a
-            href="https://yourwebsite.com/faq"
-            target="_blank"
-            rel="noreferrer noopener"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            FAQs
-          </a>
-          <a
-            href="https://yourwebsite.com/privacy-policy"
-            target="_blank"
-            rel="noreferrer noopener"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            Privacy Policy
-          </a>
-          <a
-            href="https://yourwebsite.com/terms"
-            target="_blank"
-            rel="noreferrer noopener"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            Terms of Use
-          </a> */}
         </div>
       </footer>
 

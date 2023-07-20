@@ -115,7 +115,7 @@ export default function PersonCard({ person }) {
           <p className="mb-2">
             {person.tags.map((tag) => (
               <Chip key={tag} label={tag} className="mr-1" />
-            ))} 
+            ))}
           </p>
         )}
       </div>
@@ -142,17 +142,28 @@ export default function PersonCard({ person }) {
             margin="normal"
           />
           <TextField
-            label="Contact"
-            name="contact"
-            value={editedPerson.contact}
+            label="Value"
+            name="value"
+            value={editedPerson.value}
+            onChange={handleInputChange}
+            type="number"
+            fullWidth
+            margin="normal"
+          />
+          <TagInput value={editedPerson.tags} onChange={handleTagInput} />
+
+          <TextField
+            label="Linkedin Account"
+            name="linkedin"
+            value={editedPerson.linkedin}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
           />
           <TextField
-            label="Linkedin Account"
-            name="linkedin"
-            value={editedPerson.linkedin}
+            label="Contact"
+            name="contact"
+            value={editedPerson.contact}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -165,16 +176,6 @@ export default function PersonCard({ person }) {
             fullWidth
             margin="normal"
           />
-          <TextField
-            label="Value"
-            name="value"
-            value={editedPerson.value}
-            onChange={handleInputChange}
-            type="number"
-            fullWidth
-            margin="normal"
-          />
-          <TagInput value={editedPerson.tags} onChange={handleTagInput} />
 
           <TextField
             label="Notes"

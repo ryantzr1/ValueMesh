@@ -1,5 +1,6 @@
 import React from "react";
 import "@/styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 // import { AuthContextProvider } from "../context/AuthContext";
 
 import UserProvider from "../UserProvider";
