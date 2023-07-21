@@ -59,7 +59,6 @@ export default function Login() {
           width={500}
           height={300}
         /> */}
-
         <h2 className={styles.title}>Sign in to your account</h2>
         <form onSubmit={handleSignIn}>
           <input
