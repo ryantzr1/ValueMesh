@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
-
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -10,6 +9,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../components/config/firebase";
 import styles from "../styles/signup.module.css";
+import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -50,6 +50,16 @@ export default function Login() {
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.mainTitle}>ValueMesh</h1>
+
+        {/* Add your logo here */}
+        {/* <Image
+          src="/Screenshot 2023-07-20 at 6.47.28 PM.png"
+          alt="Logo"
+          className={styles.logo}
+          width={500}
+          height={300}
+        /> */}
+
         <h2 className={styles.title}>Sign in to your account</h2>
         <form onSubmit={handleSignIn}>
           <input

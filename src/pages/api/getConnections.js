@@ -1,50 +1,65 @@
 import mongoDB from "../../utils/mongoDB";
 import Connection from "../../models/connection";
-import mongoose from "mongoose"; // Ensure to import mongoose
-
-// import cors from "cors";
+import mongoose from "mongoose";
+import { ChangeCircle } from "@mui/icons-material";
+import redis from "./redis";
 
 const getConnections = async (req, res) => {
   try {
-    mongoDB()
-      .then(() => {
-        const connectionState = mongoose.connection.readyState;
-        // console.log("Connection state:", connectionState); // Log the connection state
-      })
-      .catch((error) => {
-        console.error("Error connecting to MongoDB:", error);
-      });
+    mongoDB();
 
     const userId = req.query.userId;
-    const people = await Connection.find({ userId: userId }).exec(); // Find connections for the specific user
-    res.status(200).json(people);
+    // Check if data is in Redis
+    const cacheData = await redis.get(userId);
+    if (cacheData) {
+      // Return cached data if it exists
+      return res.status(200).json(JSON.parse(cacheData));
+    } else {
+      // If not in cache, fetch from MongoDB
+      const people = await Connection.find({ userId: userId });
+      // Save to Redis for next time
+      await redis.set(userId, JSON.stringify(people));
+      return res.status(200).json(people);
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
 const addConnection = async (req, res) => {
   try {
     const newPerson = req.body;
-    console.log(newPerson);
     const connection = new Connection(newPerson);
     const result = await connection.save();
-    res.status(201).json(result);
+    // Delete the Redis key for this user so it will be refreshed next time
+    await redis.del(newPerson.userId);
+    return res.status(201).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
 const deleteConnection = async (req, res) => {
   try {
     const { id } = req.body;
-    await Connection.findByIdAndDelete(id);
-    res.status(200).json({ message: "Connection deleted successfully" });
+    // Find the connection by ID
+    const connection = await Connection.findById(id);
+    if (!connection) {
+      return res.status(404).json({ message: "Connection not found" });
+    }
+    // Delete the connection from MongoDB
+    await connection.deleteOne();
+    // Delete the connection from Redis cache
+    const userId = connection.userId;
+    const cachedConnections = JSON.parse(await redis.get(userId)) || [];
+    const updatedConnections = cachedConnections.filter((c) => c._id !== id);
+    await redis.set(userId, JSON.stringify(updatedConnections));
+    return res.status(200).json({ message: "Connection deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 

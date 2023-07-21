@@ -1,5 +1,12 @@
 import mongoDB from "../../../utils/mongoDB";
 import Connection from "../../../models/connection";
+import Redis from "ioredis";
+// Connect to Redis
+const redis = new Redis({
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PASSWORD,
+});
 
 const getConnection = async (req, res) => {
   try {
@@ -21,6 +28,8 @@ const deleteConnection = async (req, res) => {
   try {
     const { id } = req.query;
     await Connection.findByIdAndDelete(id);
+    // Delete the Redis key for this user so it will be refreshed next time
+    await redis.del(id);
     res.status(200).json({ message: "Connection deleted successfully" });
   } catch (error) {
     console.error(error);
@@ -42,6 +51,14 @@ const updateConnection = async (req, res) => {
     if (!updatedConnection) {
       return res.status(404).json({ message: "Connection not found" });
     }
+
+    // Update the Redis cache for this user
+    const userId = updatedConnection.userId;
+    const cachedConnections = JSON.parse(await redis.get(userId)) || [];
+    const updatedConnections = cachedConnections.map((c) =>
+      c._id === id ? updatedConnection : c
+    );
+    await redis.set(userId, JSON.stringify(updatedConnections));
 
     res.status(200).json({
       message: "Connection updated successfully",
