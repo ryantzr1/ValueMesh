@@ -22,8 +22,7 @@ export default function SignUp() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+      .then(() => {
         router.push("/");
       })
       .catch((error) => {
@@ -35,7 +34,6 @@ export default function SignUp() {
   const handleSignUpWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
       router.push("/");
     } catch (error) {
       const errorMessage = error.message;

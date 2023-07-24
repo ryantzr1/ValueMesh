@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../components/config/firebase";
 import styles from "../styles/signup.module.css";
-import Image from "next/image";
+// import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,7 +27,7 @@ export default function Login() {
         email,
         password
       );
-      const user = userCredential.user;
+      // const user = userCredential.user;
       router.push("/");
     } catch (error) {
       const errorMessage = error.message;
@@ -38,7 +38,6 @@ export default function Login() {
   const handleSignInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
       router.push("/");
     } catch (error) {
       const errorMessage = error.message;

@@ -1,7 +1,5 @@
 import mongoDB from "../../utils/mongoDB";
 import Connection from "../../models/connection";
-import mongoose from "mongoose";
-import { ChangeCircle } from "@mui/icons-material";
 import redis from "./redis";
 
 const getConnections = async (req, res) => {

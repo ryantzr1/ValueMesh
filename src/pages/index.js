@@ -4,16 +4,20 @@ import PeopleCluster from "../components/PeopleCluster/PeopleCluster";
 import AddConnectionModal from "../components/AddConnectionForm/AddConnection";
 import SignOut from "../components/signOut";
 import UserContext from "../UserContext";
+import { useRouter } from "next/router";
 
 function Dashboard() {
   const [people, setPeople] = useState([]);
   const [sort, setSort] = useState("none");
   const [selectedTag, setSelectedTag] = useState("All");
   const { loading, user } = useContext(UserContext);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!loading && user) {
+      if (!user) {
+        router.push("/login");
+      } else if (!loading && user) {
         try {
           const response = await axios.get(
             `/api/getConnections?userId=${user.uid}`
@@ -26,7 +30,7 @@ function Dashboard() {
     };
 
     fetchData();
-  }, [loading, user]);
+  }, [loading, user, router]);
 
   const sorts = [
     "None",
