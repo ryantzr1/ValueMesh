@@ -15,9 +15,15 @@ function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (loading) {
+        // We are still checking for the user
+        return;
+      }
       if (!user) {
+        // No user detected, let's redirect to login
         router.push("/login");
-      } else if (!loading && user) {
+      } else {
+        // User is authenticated, let's fetch the data
         try {
           const response = await axios.get(
             `/api/getConnections?userId=${user.uid}`
@@ -28,7 +34,6 @@ function Dashboard() {
         }
       }
     };
-
     fetchData();
   }, [loading, user, router]);
 
