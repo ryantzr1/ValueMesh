@@ -157,6 +157,7 @@ export default function SharedPersonCard({ person }) {
         <DialogActions>
           <Button onClick={handleSave}>Save</Button>
           <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleCopyLink}>Copy Shareable Link</Button>
         </DialogActions>
       </Dialog>
 
