@@ -29,6 +29,7 @@ const addConnection = async (req, res) => {
   try {
     const newPerson = req.body;
     const connection = new Connection(newPerson);
+    console.log(connection);
     const result = await connection.save();
     // Delete the Redis key for this user so it will be refreshed next time
     await redis.del(newPerson.userId);

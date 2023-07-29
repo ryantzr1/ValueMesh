@@ -24,6 +24,7 @@ function Dashboard() {
         router.push("/login");
       } else {
         // User is authenticated, let's fetch the data
+
         try {
           const response = await axios.get(
             `/api/getConnections?userId=${user.uid}`

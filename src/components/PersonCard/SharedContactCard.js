@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import TagInput from "../AddConnectionForm/TagInput";
+import React, { useState, useContext } from "react";
 import { copyToClipboard } from "../../utils/copyToClipboard";
+import axios from "axios";
+import { useRouter } from "next/router";
+import UserContext from "../../UserContext";
 
 import {
   Dialog,
@@ -10,66 +11,29 @@ import {
   DialogActions,
   Button,
   TextField,
-  Autocomplete,
   Chip,
   Snackbar,
   Alert,
 } from "@mui/material";
 
-export default function PersonCard({ person }) {
+export default function SharedPersonCard({ person }) {
+  const router = useRouter();
+  const { user } = useContext(UserContext); // Access user context
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedPerson, setEditedPerson] = useState({
-    ...person,
-    tags: person.tags ?? [],
-  });
-  const [tagInput, setTagInput] = useState("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-
-  // Assuming you have a list of possible tags
-  const [possibleTags, setPossibleTags] = useState([]);
-
-  useEffect(() => {
-    if (person) {
-      setEditedPerson({
-        ...person,
-        tags: person.tags ?? [],
-      });
-      setTagInput(person.tags ? person.tags.join(", ") : "");
-    }
-  }, [person]);
+  const [editedPerson, setEditedPerson] = useState({ ...person });
 
   const handleClickOpen = () => {
-    setIsModalOpen(true);
+    if (user) {
+      setIsModalOpen(true);
+    }
   };
-
   const handleClose = () => {
     setIsModalOpen(false);
   };
 
-  const handleDialogClose = () => {
-    handleClose();
-  };
-
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
-  };
-
-  const handleTagInput = (newTags) => {
-    setEditedPerson((prevPerson) => ({
-      ...prevPerson,
-      tags: newTags,
-    }));
-  };
-
-  const handleDelete = async () => {
-    try {
-      // Send a DELETE request to the server to delete the connection
-      await axios.delete("/api/getConnections", { data: { id: person._id } });
-      handleClose();
-      window.location.reload(); // Refresh the home page
-    } catch (error) {
-      console.error("Failed to delete connection:", error);
-    }
   };
 
   const handleInputChange = (e) => {
@@ -78,23 +42,24 @@ export default function PersonCard({ person }) {
       ...prevPerson,
       [name]: value,
     }));
-    console.log(editedPerson);
   };
 
   const handleSave = async () => {
     try {
       // Send a PUT request to update the connection
-      await axios.put(`/api/updateConnection/${person._id}`, editedPerson);
+      console.log(editedPerson);
+
+      await axios.post(`/api/updateConnection/${person._id}`, editedPerson);
       handleClose();
-      window.location.reload(); // Refresh the home page
+      router.push("/");
     } catch (error) {
       console.error("Failed to update connection:", error);
     }
   };
 
   const getShareableLink = () => {
-    const baseUrl = window.location.origin; // Get the base url of your app
-    const shareableLink = `${baseUrl}/contact/${person._id}`; // Append the id of the person to the base url
+    const baseUrl = window.location.origin;
+    const shareableLink = `${baseUrl}/contact/${person._id}`;
     return shareableLink;
   };
 
@@ -143,7 +108,7 @@ export default function PersonCard({ person }) {
 
       <Dialog
         open={isModalOpen}
-        onClose={handleDialogClose}
+        onClose={handleClose}
         className="person-card-modal"
         PaperProps={{
           style: {
@@ -171,20 +136,10 @@ export default function PersonCard({ person }) {
             fullWidth
             margin="normal"
           />
-          <TagInput value={editedPerson.tags} onChange={handleTagInput} />
-
           <TextField
             label="Linkedin Account"
             name="linkedin"
             value={editedPerson.linkedin}
-            onChange={handleInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Contact"
-            name="contact"
-            value={editedPerson.contact}
             onChange={handleInputChange}
             fullWidth
             margin="normal"
@@ -197,7 +152,6 @@ export default function PersonCard({ person }) {
             fullWidth
             margin="normal"
           />
-
           <TextField
             label="Notes"
             name="notes"
@@ -209,10 +163,7 @@ export default function PersonCard({ person }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSave}>Save</Button>
-          <Button onClick={handleDialogClose}>Close</Button>
-          <Button onClick={handleDelete} color="error">
-            Delete
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
           <Button onClick={handleCopyLink}>Copy Shareable Link</Button>
         </DialogActions>
       </Dialog>

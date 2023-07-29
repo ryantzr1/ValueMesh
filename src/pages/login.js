@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../components/config/firebase";
 import styles from "../styles/signup.module.css";
@@ -19,6 +20,20 @@ export default function Login() {
   const router = useRouter();
   const googleProvider = new GoogleAuthProvider();
 
+  // Use the onAuthStateChanged method to detect when the user's authentication state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // If a redirect URL is specified, navigate to it; otherwise, navigate to home
+        const redirectURL = router.query.redirect || "/";
+        router.push(redirectURL);
+      }
+    });
+
+    // Clean up the subscription when the component unmounts
+    return () => unsubscribe();
+  }, [router]);
+
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
@@ -28,7 +43,6 @@ export default function Login() {
         password
       );
       // const user = userCredential.user;
-      router.push("/");
     } catch (error) {
       const errorMessage = error.message;
       setError("Invalid Username/Password. Please try again");
@@ -38,7 +52,6 @@ export default function Login() {
   const handleSignInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      router.push("/");
     } catch (error) {
       const errorMessage = error.message;
       setError(errorMessage);

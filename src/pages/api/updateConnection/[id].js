@@ -31,6 +31,21 @@ const deleteConnection = async (req, res) => {
   }
 };
 
+const addConnection = async (req, res) => {
+  try {
+    const newPerson = req.body;
+    const connection = new Connection(newPerson);
+    console.log(connection);
+    const result = await connection.save();
+    // Delete the Redis key for this user so it will be refreshed next time
+    await redis.del(newPerson.userId);
+    return res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
+
 const updateConnection = async (req, res) => {
   try {
     const { id } = req.query;
@@ -79,8 +94,11 @@ export default async function handler(req, res) {
     case "PUT":
       await updateConnection(req, res);
       break;
+    case "POST":
+      await addConnection(req, res);
+      break;
     default:
-      res.setHeader("Allow", ["GET", "DELETE", "PUT"]);
+      res.setHeader("Allow", ["GET", "DELETE", "PUT", "POST"]);
       res.status(405).json({ message: `Method ${method} not allowed` });
       break;
   }
