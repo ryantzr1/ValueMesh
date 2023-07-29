@@ -55,9 +55,7 @@ export default function SharedPersonCard({ person }) {
   };
 
   const getShareableLink = () => {
-    const baseUrl = window.location.origin;
-    const shareableLink = `${baseUrl}/contact/${person._id}`;
-    return shareableLink;
+    return window.location.href;
   };
 
   const handleCopyLink = () => {
@@ -88,9 +86,7 @@ export default function SharedPersonCard({ person }) {
             </a>
           </p>
         )}
-        {person.metAt && (
-          <p className="text-gray-600 mb-2">Met Through: {person.metAt}</p>
-        )}
+
         {person.value && (
           <p className="text-green-500 mb-3">Value: {person.value}</p>
         )}
@@ -161,7 +157,6 @@ export default function SharedPersonCard({ person }) {
         <DialogActions>
           <Button onClick={handleSave}>Save</Button>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleCopyLink}>Copy Shareable Link</Button>
         </DialogActions>
       </Dialog>
 
