@@ -25,7 +25,6 @@ const Contact = ({ id }) => {
             response.data.data.userId = user.uid;
           }
           response.data.data.notes = "";
-          // response.data.data.value = 0;
 
           setPerson(response.data.data);
         } catch (error) {

@@ -46,9 +46,6 @@ export default function SharedPersonCard({ person }) {
 
   const handleSave = async () => {
     try {
-      // Send a PUT request to update the connection
-      console.log(editedPerson);
-
       await axios.post(`/api/updateConnection/${person._id}`, editedPerson);
       handleClose();
       router.push("/");

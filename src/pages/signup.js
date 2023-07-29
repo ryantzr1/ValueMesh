@@ -2,10 +2,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../components/config/firebase";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../styles/signup.module.css";
 import { FcGoogle } from "react-icons/fc";
@@ -19,11 +20,22 @@ export default function SignUp() {
 
   const googleProvider = new GoogleAuthProvider();
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const redirectURL = router.query.redirect || "/";
+        router.push(redirectURL);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
-        router.push("/");
+        // router.push("/");
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -34,12 +46,16 @@ export default function SignUp() {
   const handleSignUpWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      router.push("/");
     } catch (error) {
       const errorMessage = error.message;
       setError(errorMessage);
     }
   };
+
+  // Check for the redirect URL and include it in the login URL
+  const loginUrl = router.query.redirect
+    ? `/login?redirect=${encodeURI(router.query.redirect)}`
+    : "/login";
 
   return (
     <div className={styles.container}>
@@ -78,7 +94,7 @@ export default function SignUp() {
           </button>
         </form>
         <div className={styles.linkContainer}>
-          <Link href="/login" passHref>
+          <Link href={loginUrl} passHref>
             <span className={styles.link}>
               Already have an account? Sign in
             </span>

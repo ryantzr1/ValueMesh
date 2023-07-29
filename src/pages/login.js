@@ -10,7 +10,6 @@ import {
 } from "firebase/auth";
 import { auth } from "../components/config/firebase";
 import styles from "../styles/signup.module.css";
-// import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,17 +19,14 @@ export default function Login() {
   const router = useRouter();
   const googleProvider = new GoogleAuthProvider();
 
-  // Use the onAuthStateChanged method to detect when the user's authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // If a redirect URL is specified, navigate to it; otherwise, navigate to home
         const redirectURL = router.query.redirect || "/";
         router.push(redirectURL);
       }
     });
 
-    // Clean up the subscription when the component unmounts
     return () => unsubscribe();
   }, [router]);
 
@@ -42,7 +38,6 @@ export default function Login() {
         email,
         password
       );
-      // const user = userCredential.user;
     } catch (error) {
       const errorMessage = error.message;
       setError("Invalid Username/Password. Please try again");
@@ -58,19 +53,15 @@ export default function Login() {
     }
   };
 
+  // Here's the new code to include the 'redirect' query parameter in the Sign Up link.
+  const signupUrl = router.query.redirect
+    ? `/signup?redirect=${encodeURI(router.query.redirect)}`
+    : "/signup";
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.mainTitle}>ValueMesh</h1>
-
-        {/* Add your logo here */}
-        {/* <Image
-          src="/Screenshot 2023-07-20 at 6.47.28 PM.png"
-          alt="Logo"
-          className={styles.logo}
-          width={500}
-          height={300}
-        /> */}
         <h2 className={styles.title}>Sign in to your account</h2>
         <form onSubmit={handleSignIn}>
           <input
@@ -104,7 +95,7 @@ export default function Login() {
           </button>
         </form>
         <div className={styles.linkContainer}>
-          <Link href="/signup" passHref>
+          <Link href={signupUrl} passHref>
             <span className={styles.link}>
               Don&apos;t have an account? Sign up
             </span>
