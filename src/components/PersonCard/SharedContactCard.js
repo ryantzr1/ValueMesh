@@ -82,6 +82,7 @@ export default function SharedPersonCard({ person }) {
       <div
         className="card bg-white shadow-sm rounded-lg p-6"
         onClick={handleClickOpen}
+        style={{ textAlign: "center" }}
       >
         <h2 className="text-2xl font-bold mb-2">{person.name}</h2>
         {person.industry && (
