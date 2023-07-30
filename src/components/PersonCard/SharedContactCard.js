@@ -14,6 +14,7 @@ import {
   Chip,
   Snackbar,
   Alert,
+  Typography,
 } from "@mui/material";
 
 export default function SharedPersonCard({ person }) {
@@ -67,7 +68,19 @@ export default function SharedPersonCard({ person }) {
   return (
     <>
       <div
-        className="bg-white shadow-sm rounded-lg p-6"
+        className="introduction"
+        style={{ padding: "2em", textAlign: "center" }}
+      >
+        <Typography variant="h4" component="div" gutterBottom align="center">
+          Welcome to ValueMesh
+        </Typography>
+        <Typography variant="body1" gutterBottom align="center">
+          A simple way to manage and assess the value of your professional
+          connections.
+        </Typography>
+      </div>
+      <div
+        className="card bg-white shadow-sm rounded-lg p-6"
         onClick={handleClickOpen}
       >
         <h2 className="text-2xl font-bold mb-2">{person.name}</h2>

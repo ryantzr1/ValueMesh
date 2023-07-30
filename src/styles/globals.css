@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 body {
-  background-color: #eaf6fd; /* Replace with your desired cool color */
+  background-color: #eaf6fd; /* Turquoise tint for the background */
 }
+
 .filter-container {
   display: flex;
   justify-content: space-between;
@@ -15,17 +16,35 @@ body {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #f5f5f5;
+  background-color: #f5f5f5; /* Use a light gray for inactive buttons */
+  color: #333; /* Dark text on light buttons for contrast */
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0; /* Darken the button slightly when hovered */
 }
 
 .filter-button.active {
-  background-color: #007bff;
-  color: white;
+  background-color: #ff5252; /* Use red for active buttons */
+  color: white; /* White text on red buttons for contrast */
 }
 
 .sort-container {
   display: flex;
   align-items: center;
   margin-bottom: 30px; /* Adjust this value as needed */
+}
+
+.card {
+  background-color: #ffffff;
+  color: #333333;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
 }

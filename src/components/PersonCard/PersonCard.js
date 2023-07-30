@@ -110,7 +110,7 @@ export default function PersonCard({ person }) {
   return (
     <>
       <div
-        className="bg-white shadow-sm rounded-lg p-6"
+        className="card bg-white shadow-sm rounded-lg p-6"
         onClick={handleClickOpen}
       >
         <h2 className="text-2xl font-bold mb-2">{person.name}</h2>
