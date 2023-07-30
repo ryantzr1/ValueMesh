@@ -46,10 +46,6 @@ export default function PersonCard({ person }) {
     setIsModalOpen(false);
   };
 
-  const handleDialogClose = () => {
-    handleClose();
-  };
-
   const handleSnackbarClose = () => {
     setIsSnackbarOpen(false);
   };
@@ -214,7 +210,6 @@ export default function PersonCard({ person }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSave}>Save</Button>
-          <Button onClick={handleDialogClose}>Close</Button>
           <Button onClick={handleDelete} color="error">
             Delete
           </Button>
