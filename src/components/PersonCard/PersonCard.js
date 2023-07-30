@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TagInput from "../AddConnectionForm/TagInput";
 import { copyToClipboard } from "../../utils/copyToClipboard";
-
 import {
   Dialog,
   DialogTitle,
@@ -15,6 +14,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import QRCode from "qrcode.react";
 
 export default function PersonCard({ person }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,8 +25,8 @@ export default function PersonCard({ person }) {
   const [tagInput, setTagInput] = useState("");
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
-  // Assuming you have a list of possible tags
-  const [possibleTags, setPossibleTags] = useState([]);
+  const [qrCodeOpen, setQRCodeOpen] = useState(false);
+  const [qrCodeLink, setQRCodeLink] = useState("");
 
   useEffect(() => {
     if (person) {
@@ -54,6 +54,16 @@ export default function PersonCard({ person }) {
     setIsSnackbarOpen(false);
   };
 
+  const handleOpenQRCode = () => {
+    const shareableLink = getShareableLink();
+    setQRCodeOpen(true);
+    setQRCodeLink(shareableLink);
+  };
+
+  const handleCloseQRCode = () => {
+    setQRCodeOpen(false);
+  };
+
   const handleTagInput = (newTags) => {
     setEditedPerson((prevPerson) => ({
       ...prevPerson,
@@ -63,10 +73,9 @@ export default function PersonCard({ person }) {
 
   const handleDelete = async () => {
     try {
-      // Send a DELETE request to the server to delete the connection
       await axios.delete("/api/getConnections", { data: { id: person._id } });
       handleClose();
-      window.location.reload(); // Refresh the home page
+      window.location.reload();
     } catch (error) {
       console.error("Failed to delete connection:", error);
     }
@@ -78,23 +87,21 @@ export default function PersonCard({ person }) {
       ...prevPerson,
       [name]: value,
     }));
-    console.log(editedPerson);
   };
 
   const handleSave = async () => {
     try {
-      // Send a PUT request to update the connection
       await axios.put(`/api/updateConnection/${person._id}`, editedPerson);
       handleClose();
-      window.location.reload(); // Refresh the home page
+      window.location.reload();
     } catch (error) {
       console.error("Failed to update connection:", error);
     }
   };
 
   const getShareableLink = () => {
-    const baseUrl = window.location.origin; // Get the base url of your app
-    const shareableLink = `${baseUrl}/contact/${person._id}`; // Append the id of the person to the base url
+    const baseUrl = window.location.origin;
+    const shareableLink = `${baseUrl}/contact/${person._id}`;
     return shareableLink;
   };
 
@@ -172,7 +179,6 @@ export default function PersonCard({ person }) {
             margin="normal"
           />
           <TagInput value={editedPerson.tags} onChange={handleTagInput} />
-
           <TextField
             label="Linkedin Account"
             name="linkedin"
@@ -197,7 +203,6 @@ export default function PersonCard({ person }) {
             fullWidth
             margin="normal"
           />
-
           <TextField
             label="Notes"
             name="notes"
@@ -214,7 +219,27 @@ export default function PersonCard({ person }) {
             Delete
           </Button>
           <Button onClick={handleCopyLink}>Copy Shareable Link</Button>
+          <Button onClick={handleOpenQRCode}>Show QR Code</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={qrCodeOpen}
+        onClose={handleCloseQRCode}
+        className="qr-code-modal"
+        PaperProps={{
+          style: {
+            width: "250px",
+            height: "300px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        }}
+      >
+        <DialogTitle>Scan this QR code</DialogTitle>
+        <QRCode value={qrCodeLink} size={200} />
       </Dialog>
 
       <Snackbar
