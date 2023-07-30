@@ -229,8 +229,8 @@ export default function PersonCard({ person }) {
         className="qr-code-modal"
         PaperProps={{
           style: {
-            width: "250px",
-            height: "300px",
+            width: "350px",
+            height: "400px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -239,7 +239,7 @@ export default function PersonCard({ person }) {
         }}
       >
         <DialogTitle>Scan this QR code</DialogTitle>
-        <QRCode value={qrCodeLink} size={200} />
+        <QRCode value={qrCodeLink} size={300} />
       </Dialog>
 
       <Snackbar
