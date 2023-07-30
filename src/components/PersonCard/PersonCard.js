@@ -146,7 +146,7 @@ export default function PersonCard({ person }) {
 
       <Dialog
         open={isModalOpen}
-        onClose={handleDialogClose}
+        onClose={handleClose}
         className="person-card-modal"
         PaperProps={{
           style: {
