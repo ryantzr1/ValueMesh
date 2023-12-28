@@ -1,7 +1,7 @@
 import mongoDB from "../../utils/mongoDB";
 import Connection from "../../models/connection";
 import redis from "./redis";
-
+//test
 const getConnections = async (req, res) => {
   try {
     mongoDB();
